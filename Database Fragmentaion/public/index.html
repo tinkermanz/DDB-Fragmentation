@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Fragmentation Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Database Fragmentation Tool</h1>
+        
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">Initialize Database</div>
+                    <div class="card-body">
+                        <p>Click the button below to initialize the database with sample data:</p>
+                        <button id="initDbBtn" class="btn btn-primary">Initialize Database</button>
+                        <div id="initDbResult" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Fragmentation Options -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Fragmentation Options</div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="fragmentationTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="horizontal-tab" data-bs-toggle="tab" data-bs-target="#horizontal" type="button" role="tab">Horizontal</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="vertical-tab" data-bs-toggle="tab" data-bs-target="#vertical" type="button" role="tab">Vertical</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="derived-tab" data-bs-toggle="tab" data-bs-target="#derived" type="button" role="tab">Derived</button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content mt-3" id="fragmentationTabContent">
+                            <!-- Horizontal Fragmentation -->
+                            <div class="tab-pane fade show active" id="horizontal" role="tabpanel">
+                                <form id="horizontalForm">
+                                    <div class="mb-3">
+                                        <label for="horizontalCondition" class="form-label">Condition (WHERE clause):</label>
+                                        <input type="text" class="form-control" id="horizontalCondition" placeholder="e.g., department = 'IT'">
+                                        <div class="form-text">Examples: department = 'IT', salary > 70000, location = 'New York'</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Apply Horizontal Fragmentation</button>
+                                </form>
+                            </div>
+                            
+                            <!-- Vertical Fragmentation -->
+                            <div class="tab-pane fade" id="vertical" role="tabpanel">
+                                <form id="verticalForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Select Columns:</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="id" id="colId" checked disabled>
+                                            <label class="form-check-label" for="colId">id (Primary Key - Always Selected)</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="name" id="colName">
+                                            <label class="form-check-label" for="colName">name</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="age" id="colAge">
+                                            <label class="form-check-label" for="colAge">age</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="department" id="colDepartment">
+                                            <label class="form-check-label" for="colDepartment">department</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="salary" id="colSalary">
+                                            <label class="form-check-label" for="colSalary">salary</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="location" id="colLocation">
+                                            <label class="form-check-label" for="colLocation">location</label>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Apply Vertical Fragmentation</button>
+                                </form>
+                            </div>
+                            
+                            <!-- Derived Fragmentation -->
+                            <div class="tab-pane fade" id="derived" role="tabpanel">
+                                <form id="derivedForm">
+                                    <div class="mb-3">
+                                        <label for="parentCondition" class="form-label">Parent Condition:</label>
+                                        <input type="text" class="form-control" id="parentCondition" placeholder="e.g., department = 'IT'">
+                                        <div class="form-text">First level of fragmentation</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="childCondition" class="form-label">Child Condition:</label>
+                                        <input type="text" class="form-control" id="childCondition" placeholder="e.g., salary > 70000">
+                                        <div class="form-text">Second level of fragmentation applied to parent results</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Apply Derived Fragmentation</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results and Reconstruction -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Fragmentation Results</div>
+                    <div class="card-body">
+                        <div id="fragmentResult" class="table-container">
+                            <p class="text-muted">Apply fragmentation to see results here.</p>
+                        </div>
+                        <div class="btn-group mt-2">
+                            <button id="saveFragmentBtn" class="btn btn-primary" disabled>Save Fragment</button>
+                            <button id="discardFragmentBtn" class="btn btn-secondary" disabled>Discard Fragment</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Saved Fragments</div>
+                    <div class="card-body">
+                        <div id="savedFragments">
+                            <p class="text-muted">No fragments saved yet.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Reconstruction</div>
+                    <div class="card-body">
+                        <form id="reconstructForm">
+                            <div class="mb-3">
+                                <label class="form-label">Reconstruction Type:</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="reconstructType" id="unionType" value="union" checked>
+                                    <label class="form-check-label" for="unionType">
+                                        Union (for Horizontal Fragments)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="reconstructType" id="joinType" value="join">
+                                    <label class="form-check-label" for="joinType">
+                                        Join (for Vertical Fragments)
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success" id="reconstructBtn" disabled>Reconstruct Selected Fragments</button>
+                        </form>
+                        <div id="reconstructResult" class="table-container mt-3">
+                            <p class="text-muted">Reconstruction results will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

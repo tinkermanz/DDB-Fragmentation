@@ -1,0 +1,36 @@
+body {
+    padding-top: 20px;
+    padding-bottom: 40px;
+    background-color: #f8f9fa;
+}
+.container {
+    max-width: 1200px;
+}
+.card {
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.card-header {
+    background-color: #f1f8ff;
+    font-weight: bold;
+}
+.table-container {
+    overflow-x: auto;
+    max-height: 300px;
+    overflow-y: auto;
+}
+.fragment-container {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+.fragment-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+#savedFragments {
+    max-height: 400px;
+    overflow-y: auto;
+}
